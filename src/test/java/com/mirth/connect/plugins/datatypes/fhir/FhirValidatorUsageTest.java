@@ -54,6 +54,12 @@ public class FhirValidatorUsageTest {
         @Override public String toXml(String json, String fhirVersion, boolean pretty) { throw new UnsupportedOperationException(); }
         @Override public String reorderXml(String xml, String fhirVersion, boolean pretty) { throw new UnsupportedOperationException(); }
         @Override public String reorderJson(String json, String fhirVersion, boolean pretty) { throw new UnsupportedOperationException(); }
+        @Override public String listProfiles(Map<String, String> options) { throw new UnsupportedOperationException(); }
+        @Override public String structureDefinition(String url, Map<String, String> options) { throw new UnsupportedOperationException(); }
+        @Override public String listConceptMaps(Map<String, String> options) { throw new UnsupportedOperationException(); }
+        @Override public String translate(String conceptMap, String system, String code, String targetSystem, Map<String, String> options) { throw new UnsupportedOperationException(); }
+        @Override public String lookup(String system, String code, Map<String, String> options) { throw new UnsupportedOperationException(); }
+        @Override public boolean validateCode(String valueSet, String system, String code, Map<String, String> options) { throw new UnsupportedOperationException(); }
         @Override public void warmUp(Map<String, String> options) {}
         // @formatter:on
     }

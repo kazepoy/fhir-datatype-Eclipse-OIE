@@ -1,0 +1,46 @@
+{
+  "resourceType": "CodeSystem",
+  "id": "lab-codes",
+  "url": "http://example.org/fhir/oru2fhir/CodeSystem/lab-codes",
+  "version": "0.1.0",
+  "name": "ExampleLabCodes",
+  "title": "Codes locaux du laboratoire d'exemple",
+  "status": "draft",
+  "experimental": true,
+  "caseSensitive": true,
+  "content": "complete",
+  "concept": [
+    {
+      "code": "BIOCHEM",
+      "display": "Bilan biochimique"
+    },
+    {
+      "code": "GLU",
+      "display": "Glucose"
+    },
+    {
+      "code": "K",
+      "display": "Potassium"
+    },
+    {
+      "code": "NA",
+      "display": "Sodium"
+    },
+    {
+      "code": "CREA",
+      "display": "Créatinine"
+    },
+    {
+      "code": "COMMENT",
+      "display": "Commentaire du laboratoire"
+    },
+    {
+      "code": "CR_PDF",
+      "display": "Compte rendu PDF"
+    },
+    {
+      "code": "SER",
+      "display": "Sérum"
+    }
+  ]
+}

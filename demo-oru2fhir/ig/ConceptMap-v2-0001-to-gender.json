@@ -1,0 +1,83 @@
+{
+  "resourceType": "ConceptMap",
+  "id": "v2-0001-to-gender",
+  "url": "http://example.org/fhir/oru2fhir/ConceptMap/v2-0001-to-gender",
+  "version": "0.1.0",
+  "name": "V20001ToGender",
+  "title": "HL7 v2 table 0001 (sexe) vers administrative-gender",
+  "status": "draft",
+  "experimental": true,
+  "group": [
+    {
+      "source": "http://terminology.hl7.org/CodeSystem/v2-0001",
+      "target": "http://hl7.org/fhir/administrative-gender",
+      "element": [
+        {
+          "code": "F",
+          "target": [
+            {
+              "code": "female",
+              "display": "Female",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "M",
+          "target": [
+            {
+              "code": "male",
+              "display": "Male",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "O",
+          "target": [
+            {
+              "code": "other",
+              "display": "Other",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "A",
+          "target": [
+            {
+              "code": "other",
+              "display": "Other",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "N",
+          "target": [
+            {
+              "code": "other",
+              "display": "Other",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "U",
+          "target": [
+            {
+              "code": "unknown",
+              "display": "Unknown",
+              "equivalence": "equivalent"
+            }
+          ]
+        }
+      ],
+      "unmapped": {
+        "mode": "fixed",
+        "code": "unknown",
+        "display": "Unknown"
+      }
+    }
+  ]
+}

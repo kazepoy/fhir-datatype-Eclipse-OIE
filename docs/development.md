@@ -29,8 +29,9 @@ This guide is for people who build, change or release the FHIR Data Type. For us
 | `src/main/java/.../fhir/client/` | Administrator classes: client plugin and the code templates. `datatype-fhir-client.jar`. |
 | `src/main/java/.../fhir/engine/` | `HapiFhirEngine`, the only code that touches HAPI FHIR. `lib/datatype-fhir-engine.jar`. |
 | `src/main/resources/plugin.xml` | The extension descriptor the engine reads. |
+| `src/main/resources/.../fhir/profile-mapper-runtime.js` | The JavaScript the FHIR Profile Mapper step puts in front of its mappings; in `datatype-fhir-shared.jar`. |
 | `src/test/` | JUnit 4 tests, plus a test profile in `resources/profiles/`. |
-| `webadmin/` | The properties panel for the OIE web administrator (`plugin.json`, `web/plugin.js`). |
+| `webadmin/` | The web administrator: the data type properties panel and the editor of the FHIR Profile Mapper step (`plugin.json`, `web/plugin.js`). |
 | `examples/` | Test messages and the generated code template library for the web administrator. |
 | `docs/` | This guide and the code template reference. |
 | `assembly.xml` | How the extension zip is laid out. |
@@ -45,7 +46,7 @@ This guide is for people who build, change or release the FHIR Data Type. For us
 
 - **JDK 17.** The plugin jars target Java 11, the engine jar Java 17 (see [Two Java levels](#two-java-levels)); one JDK 17 builds both.
 - **Maven 3.8** or later.
-- **The OIE 4.6.0 engine jars** in your local Maven repository. They are not published to Maven Central, so install them once from an OIE 4.6.0 installation:
+- **The OIE engine jars** (4.7.0 by default, `-Doie.version=4.6.0` for 4.6.0) in your local Maven repository. They are not published to Maven Central, so install them once from an OIE installation of that version (below for 4.6.0; replace the version for 4.7.0):
 
 | Maven artifact (`com.mirth.connect`, version `4.6.0`) | File in the OIE installation |
 | --- | --- |
@@ -130,6 +131,10 @@ The other shared classes:
 | `FhirValidation` | The result of one validation: issues, valid or not, summary. |
 | `FhirBundleSplitter` | Splits a Bundle into one message per entry. Pure Java. |
 | `FhirTools` | Static functions for channel scripts. |
+| `FhirProfileMapperStep` | The FHIR Profile Mapper transformer step: generates the script from the mappings the web administrator compiled. |
+| `FhirProfileServletInterface`, `server.FhirProfileServlet` | `/api/extensions/datatype-fhir`: the profiles of a set of packages, a StructureDefinition with snapshot, the ConceptMaps of a terminology server and a test `$translate`, for the step editor. |
+| `server.FhirMapperTester` | The *Generated script* (syntax errors by element) and *Test* runs of the step editor: the step on a sample message in a Rhino sandbox (maps, `$cfg`, code templates, 10-second limit), then validated. |
+| `FhirTerminology` | `ConceptMap/$translate`: over HTTP (JDK `HttpClient`, no HAPI, 5-minute cache), or without a server (`n/a`) locally through `FhirEngine.translate` on the ConceptMaps of the profile packages; behind `FhirTools.translate` and the step's translations. |
 | `FhirEngine`, `FhirEngineLoader` | The boundary to HAPI FHIR; see [The isolated FHIR engine](#the-isolated-fhir-engine). |
 | `FhirVocabulary` | Required by the engine; adds no descriptions. |
 
@@ -315,6 +320,8 @@ There are 83 tests (JUnit 4). They run without OIE: the engine jars are on the t
 | `TerminologyServerTest` | The terminology server option against `https://tx.fhir.org/r4`. Skipped when there is no network. |
 
 Run tests from the repository root: some read files from `examples/`.
+
+The logic of the FHIR Profile Mapper editor (tree, compilation of the mappings, iterations, conditions, completeness) has Node tests on small StructureDefinitions: `node --test webadmin/test/` (Node 18 or later).
 
 ## Trying it in OIE
 

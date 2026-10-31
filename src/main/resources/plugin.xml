@@ -1,7 +1,7 @@
 <pluginMetaData path="datatype-fhir">
 	<name>FHIR Data Type</name>
 	<author>X Connections</author>
-	<pluginVersion>1.5.1</pluginVersion>
+	<pluginVersion>1.6.0-poc</pluginVersion>
 	<mirthVersion>4.6.0,4.7.0</mirthVersion>
 	<url>https://x-connections.info</url>
 	<description>This plugin provides the HL7 FHIR data type: FHIR JSON and XML in, FHIR XML in the transformer, FHIR JSON or XML out, with validation against the FHIR specification and your own profiles (HAPI FHIR).</description>
@@ -16,5 +16,8 @@
 	<library type="CLIENT" path="datatype-fhir-client.jar" />
 	<library type="SHARED" path="datatype-fhir-shared.jar" />
 	<library type="SERVER" path="datatype-fhir-server.jar" />
+	<!-- REST API of the FHIR Profile Mapper step: /api/extensions/datatype-fhir. -->
+	<apiProvider type="SERVLET_INTERFACE" name="com.mirth.connect.plugins.datatypes.fhir.FhirProfileServletInterface"/>
+	<apiProvider type="SERVER_CLASS" name="com.mirth.connect.plugins.datatypes.fhir.server.FhirProfileServlet"/>
 	<!-- lib/ (HAPI FHIR) is not listed: the plugin loads it in its own class loader. -->
 </pluginMetaData>

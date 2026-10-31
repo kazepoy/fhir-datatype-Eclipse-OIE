@@ -17,10 +17,10 @@ import java.util.Map;
  * LinkedHashMaps, arrays Lists, strings Strings, booleans Booleans, numbers {@link Number}s and null
  * {@link #NULL}. No dependencies, so it also runs in the Administrator.
  */
-final class FhirJson {
+public final class FhirJson {
 
     /** JSON null, so a null in an array (FHIR uses them to align primitive extensions) is kept. */
-    static final Object NULL = new Object() {
+    public static final Object NULL = new Object() {
         @Override
         public String toString() {
             return "null";
@@ -48,7 +48,7 @@ final class FhirJson {
         this.s = s;
     }
 
-    static Object parse(String json) {
+    public static Object parse(String json) {
         FhirJson reader = new FhirJson(json);
         reader.skipWhitespace();
         Object value = reader.value();
@@ -60,7 +60,7 @@ final class FhirJson {
     }
 
     /** Writes a parsed value back as JSON, indented with two spaces; numbers keep their exact text. */
-    static String write(Object value) {
+    public static String write(Object value) {
         StringBuilder sb = new StringBuilder();
         write(sb, value, 0);
         return sb.toString();

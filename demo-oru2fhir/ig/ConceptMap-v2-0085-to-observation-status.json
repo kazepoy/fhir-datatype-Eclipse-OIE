@@ -1,0 +1,99 @@
+{
+  "resourceType": "ConceptMap",
+  "id": "v2-0085-to-observation-status",
+  "url": "http://example.org/fhir/oru2fhir/ConceptMap/v2-0085-to-observation-status",
+  "version": "0.1.0",
+  "name": "V20085ToObservationStatus",
+  "title": "HL7 v2 table 0085 (statut de résultat) vers Observation.status",
+  "status": "draft",
+  "experimental": true,
+  "group": [
+    {
+      "source": "http://terminology.hl7.org/CodeSystem/v2-0085",
+      "target": "http://hl7.org/fhir/observation-status",
+      "element": [
+        {
+          "code": "F",
+          "target": [
+            {
+              "code": "final",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "C",
+          "target": [
+            {
+              "code": "corrected",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "P",
+          "target": [
+            {
+              "code": "preliminary",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "R",
+          "target": [
+            {
+              "code": "registered",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "I",
+          "target": [
+            {
+              "code": "registered",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "S",
+          "target": [
+            {
+              "code": "preliminary",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "X",
+          "target": [
+            {
+              "code": "cancelled",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "D",
+          "target": [
+            {
+              "code": "entered-in-error",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "W",
+          "target": [
+            {
+              "code": "entered-in-error",
+              "equivalence": "equivalent"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

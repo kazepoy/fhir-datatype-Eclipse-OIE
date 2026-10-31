@@ -1,0 +1,48 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "ExampleLabServiceRequest",
+  "url": "http://example.org/fhir/oru2fhir/StructureDefinition/ExampleLabServiceRequest",
+  "version": "0.1.0",
+  "name": "ExampleLabServiceRequest",
+  "title": "Demande d'examen de laboratoire",
+  "status": "draft",
+  "experimental": true,
+  "publisher": "Exemple oru2fhir",
+  "description": "La demande (ORC/OBR) à l'origine d'un résultat : identifiants de demande et d'exécution, examen demandé, patient.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "ServiceRequest",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/ServiceRequest",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "ServiceRequest",
+        "path": "ServiceRequest"
+      },
+      {
+        "id": "ServiceRequest.identifier",
+        "path": "ServiceRequest.identifier",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "ServiceRequest.code",
+        "path": "ServiceRequest.code",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "ServiceRequest.subject",
+        "path": "ServiceRequest.subject",
+        "mustSupport": true
+      },
+      {
+        "id": "ServiceRequest.authoredOn",
+        "path": "ServiceRequest.authoredOn",
+        "mustSupport": true
+      }
+    ]
+  }
+}

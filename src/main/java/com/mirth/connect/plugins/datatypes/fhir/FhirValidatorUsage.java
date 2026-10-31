@@ -43,7 +43,7 @@ public final class FhirValidatorUsage {
     }
 
     /** Starts the periodic check, once the engine validates. */
-    static synchronized void startPeriodicRelease(FhirEngine engine) {
+    public static synchronized void startPeriodicRelease(FhirEngine engine) {
         if (timer != null) {
             return;
         }

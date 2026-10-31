@@ -1,0 +1,23 @@
+{
+  "resourceType": "ConceptMap",
+  "id": "v2-sex",
+  "url": "http://example.org/ConceptMap/v2-sex",
+  "version": "1.0.0",
+  "name": "V2Sex",
+  "title": "HL7 v2 table 0001 to administrative-gender (R4)",
+  "status": "draft",
+  "sourceUri": "http://terminology.hl7.org/ValueSet/v2-0001",
+  "targetUri": "http://hl7.org/fhir/ValueSet/administrative-gender",
+  "group": [
+    {
+      "source": "http://terminology.hl7.org/CodeSystem/v2-0001",
+      "target": "http://hl7.org/fhir/administrative-gender",
+      "element": [
+        { "code": "F", "target": [ { "code": "female", "display": "Female", "equivalence": "equivalent" } ] },
+        { "code": "M", "target": [ { "code": "male", "display": "Male", "equivalence": "equivalent" } ] },
+        { "code": "A", "target": [ { "code": "other", "display": "Other", "equivalence": "wider" } ] },
+        { "code": "U", "target": [ { "equivalence": "unmatched" } ] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "resourceType": "ConceptMap",
+  "id": "lab-codes-to-loinc",
+  "url": "http://example.org/fhir/oru2fhir/ConceptMap/lab-codes-to-loinc",
+  "version": "0.1.0",
+  "name": "LabCodesToLoinc",
+  "title": "Codes locaux vers LOINC",
+  "status": "draft",
+  "experimental": true,
+  "group": [
+    {
+      "source": "http://example.org/fhir/oru2fhir/CodeSystem/lab-codes",
+      "target": "http://loinc.org",
+      "element": [
+        {
+          "code": "GLU",
+          "target": [
+            {
+              "code": "14749-6",
+              "display": "Glucose [Moles/volume] in Serum or Plasma",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "K",
+          "target": [
+            {
+              "code": "2823-3",
+              "display": "Potassium [Moles/volume] in Serum or Plasma",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "NA",
+          "target": [
+            {
+              "code": "2951-2",
+              "display": "Sodium [Moles/volume] in Serum or Plasma",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "CREA",
+          "target": [
+            {
+              "code": "14682-9",
+              "display": "Creatinine [Moles/volume] in Serum or Plasma",
+              "equivalence": "equivalent"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

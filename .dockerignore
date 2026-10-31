@@ -1,0 +1,10 @@
+# Contexte de build de demo-oru2fhir/Dockerfile : seuls pom.xml, assembly.xml, src/ et webadmin/ servent.
+.git
+.github
+target
+dev-ext
+docs
+examples
+demo-oru2fhir
+*.zip
+*.sh

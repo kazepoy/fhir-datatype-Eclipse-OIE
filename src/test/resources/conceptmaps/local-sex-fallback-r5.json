@@ -1,0 +1,17 @@
+{
+  "resourceType": "ConceptMap",
+  "url": "http://example.org/ConceptMap/local-sex-fallback",
+  "name": "LocalSexFallback",
+  "status": "draft",
+  "group": [
+    {
+      "source": "http://example.org/CodeSystem/local-sex",
+      "target": "http://hl7.org/fhir/administrative-gender",
+      "element": [
+        { "code": "2", "target": [ { "code": "female", "relationship": "equivalent" } ] },
+        { "code": "9", "target": [ { "code": "other", "relationship": "not-related-to" } ] }
+      ],
+      "unmapped": { "mode": "fixed", "code": "unknown", "display": "Unknown" }
+    }
+  ]
+}

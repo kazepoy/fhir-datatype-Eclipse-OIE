@@ -1,0 +1,90 @@
+{
+  "resourceType": "ConceptMap",
+  "id": "v2-0123-to-report-status",
+  "url": "http://example.org/fhir/oru2fhir/ConceptMap/v2-0123-to-report-status",
+  "version": "0.1.0",
+  "name": "V20123ToReportStatus",
+  "title": "HL7 v2 table 0123 (statut du résultat) vers DiagnosticReport.status",
+  "status": "draft",
+  "experimental": true,
+  "group": [
+    {
+      "source": "http://terminology.hl7.org/CodeSystem/v2-0123",
+      "target": "http://hl7.org/fhir/diagnostic-report-status",
+      "element": [
+        {
+          "code": "F",
+          "target": [
+            {
+              "code": "final",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "C",
+          "target": [
+            {
+              "code": "corrected",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "P",
+          "target": [
+            {
+              "code": "preliminary",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "R",
+          "target": [
+            {
+              "code": "partial",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "S",
+          "target": [
+            {
+              "code": "partial",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "I",
+          "target": [
+            {
+              "code": "registered",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "O",
+          "target": [
+            {
+              "code": "registered",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "X",
+          "target": [
+            {
+              "code": "cancelled",
+              "equivalence": "equivalent"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

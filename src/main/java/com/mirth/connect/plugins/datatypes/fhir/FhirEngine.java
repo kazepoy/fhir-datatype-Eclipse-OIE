@@ -54,6 +54,42 @@ public interface FhirEngine {
     /** FHIR JSON written again in the order of the specification. Fails on properties that are not in the specification. */
     String reorderJson(String json, String fhirVersion, boolean pretty) throws Exception;
 
+    /**
+     * The StructureDefinitions of resource profiles in the {@link #PROFILES} of these options, as a
+     * JSON array of objects with url, name, title and type, sorted by url.
+     */
+    String listProfiles(Map<String, String> options) throws Exception;
+
+    /**
+     * A StructureDefinition (profile, resource or data type) as FHIR JSON, always with its snapshot:
+     * one without is generated from its base. {@code url} is a canonical URL, or the name of a type of
+     * the specification (Patient, HumanName). Looked up in the {@link #PROFILES} of these options and
+     * the specification.
+     */
+    String structureDefinition(String url, Map<String, String> options) throws Exception;
+
+    /**
+     * The ConceptMaps in the {@link #PROFILES} of these options, as a JSON array of objects with url,
+     * name, title, source and target, sorted by url.
+     */
+    String listConceptMaps(Map<String, String> options) throws Exception;
+
+    /**
+     * ConceptMap/$translate without a terminology server, on a ConceptMap of the {@link #PROFILES}.
+     *
+     * @param conceptMap canonical URL, optionally with |version
+     * @param system code system of the code, or empty for any group
+     * @param targetSystem code system to translate to, or empty for any group
+     * @return the match as JSON with system, code and display, or null
+     */
+    String translate(String conceptMap, String system, String code, String targetSystem, Map<String, String> options) throws Exception;
+
+    /** CodeSystem/$lookup without a terminology server: the display of a code, or null when the code is not known. */
+    String lookup(String system, String code, Map<String, String> options) throws Exception;
+
+    /** ValueSet/$validate-code without a terminology server: whether the code is in the value set. */
+    boolean validateCode(String valueSet, String system, String code, Map<String, String> options) throws Exception;
+
     /** Builds the validator for these options ahead of the first message; loading the specification takes a few seconds. */
     void warmUp(Map<String, String> options);
 

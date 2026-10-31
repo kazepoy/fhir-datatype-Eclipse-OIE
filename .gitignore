@@ -6,3 +6,9 @@ target/
 *.iml
 .vscode/
 .DS_Store
+
+# Build décompressé monté dans l OIE Docker (dev-deploy-oie.sh)
+dev-ext/
+
+# Réglages locaux de la démo
+demo-oru2fhir/.env

@@ -1,0 +1,428 @@
+<channel version="4.7.0">
+  <id>5d0f6c2a-8b3e-4f1a-9c7d-2e6b1a0f3c48</id>
+  <nextMetaDataId>2</nextMetaDataId>
+  <name>ORU R01 vers Bundle FHIR</name>
+  <description>Démo oru2fhir : un ORU^R01 (POST ER7 sur /oru/, port 8081) devient un Bundle transaction FHIR R4, conforme aux profils d'exemple de /fhir-ig. Sept étapes FHIR Profile Mapper, sans FML ni script. La réponse HTTP est le Bundle.</description>
+  <revision>1</revision>
+  <sourceConnector version="4.7.0">
+    <metaDataId>0</metaDataId>
+    <name>sourceConnector</name>
+    <properties class="com.mirth.connect.connectors.http.HttpReceiverProperties" version="4.7.0">
+      <pluginProperties />
+      <listenerConnectorProperties version="4.7.0">
+        <host>0.0.0.0</host>
+        <port>8081</port>
+      </listenerConnectorProperties>
+      <sourceConnectorProperties version="4.7.0">
+        <responseVariable>d1</responseVariable>
+        <respondAfterProcessing>true</respondAfterProcessing>
+        <processBatch>false</processBatch>
+        <firstResponse>false</firstResponse>
+        <processingThreads>1</processingThreads>
+        <resourceIds class="linked-hash-map">
+          <entry>
+            <string>Default Resource</string>
+            <string>[Default Resource]</string>
+          </entry>
+        </resourceIds>
+        <queueBufferSize>1000</queueBufferSize>
+      </sourceConnectorProperties>
+      <xmlBody>false</xmlBody>
+      <parseMultipart>false</parseMultipart>
+      <includeMetadata>false</includeMetadata>
+      <binaryMimeTypes>application/.*(?&lt;!json|xml)|image/.*|video/.*|audio/.*</binaryMimeTypes>
+      <binaryMimeTypesRegex>true</binaryMimeTypesRegex>
+      <responseContentType>application/fhir+json; charset=UTF-8</responseContentType>
+      <responseDataTypeBinary>false</responseDataTypeBinary>
+      <responseStatusCode>200</responseStatusCode>
+      <responseHeaders class="linked-hash-map" />
+      <responseHeadersVariable />
+      <useResponseHeadersVariable>false</useResponseHeadersVariable>
+      <charset>UTF-8</charset>
+      <contextPath>/oru</contextPath>
+      <timeout>30000</timeout>
+      <staticResources />
+    </properties>
+    <transformer version="4.7.0"><elements><com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep version="4.7.0">
+  <name>Bundle</name>
+  <sequenceNumber>0</sequenceNumber>
+  <enabled>true</enabled>
+  <fhirVersion>R4</fhirVersion>
+  <profiles>/fhir-ig</profiles>
+  <profileUrl>http://example.org/fhir/oru2fhir/StructureDefinition/ExampleOruBundle</profileUrl>
+  <profileVersion></profileVersion>
+  <resourceType>Bundle</resourceType>
+  <addMetaProfile>true</addMetaProfile>
+  <setLastUpdated>false</setLastUpdated>
+  <variable></variable>
+  <output>bundle</output>
+  <bundleType>transaction</bundleType>
+  <bundleProfile></bundleProfile>
+  <refName></refName>
+  <requestMethod>POST</requestMethod>
+  <requestUrl></requestUrl>
+  <ifNoneExist></ifNoneExist>
+  <terminologyServer>n/a</terminologyServer>
+  <terminologyAuthorization></terminologyAuthorization>
+  <terminologyCacheSeconds>300</terminologyCacheSeconds>
+  <terminologyTimeoutSeconds>10</terminologyTimeoutSeconds>
+  <mappings>[{&quot;key&quot;: &quot;Bundle.identifier.system&quot;, &quot;element&quot;: &quot;Bundle.identifier.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://example.org/fhir/oru2fhir/sid/message-control-id&apos;&quot;, &quot;path&quot;: [[&quot;identifier&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;Bundle.identifier.value&quot;, &quot;element&quot;: &quot;Bundle.identifier.value&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;msg[&apos;MSH&apos;][&apos;MSH.10&apos;][&apos;MSH.10.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;identifier&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;Bundle.timestamp&quot;, &quot;element&quot;: &quot;Bundle.timestamp&quot;, &quot;type&quot;: &quot;instant&quot;, &quot;expression&quot;: &quot;msg[&apos;MSH&apos;][&apos;MSH.7&apos;][&apos;MSH.7.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;timestamp&quot;]]}, {&quot;key&quot;: &quot;Bundle.type&quot;, &quot;element&quot;: &quot;Bundle.type&quot;, &quot;fixed&quot;: &quot;transaction&quot;, &quot;when&quot;: 0, &quot;path&quot;: [[&quot;type&quot;]]}]</mappings>
+</com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep>
+<com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep version="4.7.0">
+  <name>Patient</name>
+  <sequenceNumber>1</sequenceNumber>
+  <enabled>true</enabled>
+  <fhirVersion>R4</fhirVersion>
+  <profiles>/fhir-ig</profiles>
+  <profileUrl>http://example.org/fhir/oru2fhir/StructureDefinition/ExampleLabPatient</profileUrl>
+  <profileVersion></profileVersion>
+  <resourceType>Patient</resourceType>
+  <addMetaProfile>true</addMetaProfile>
+  <setLastUpdated>false</setLastUpdated>
+  <variable></variable>
+  <output>bundle</output>
+  <bundleType>transaction</bundleType>
+  <bundleProfile></bundleProfile>
+  <refName>&apos;patient&apos;</refName>
+  <requestMethod>PUT</requestMethod>
+  <requestUrl>&apos;Patient?identifier=http://example.org/fhir/oru2fhir/sid/ipp|&apos; + fhirFind(msg[&apos;PID&apos;][&apos;PID.3&apos;], function (cx) { return cx[&apos;PID.3.5&apos;] == &apos;PI&apos;; })[&apos;PID.3.1&apos;]</requestUrl>
+  <ifNoneExist></ifNoneExist>
+  <terminologyServer>n/a</terminologyServer>
+  <terminologyAuthorization></terminologyAuthorization>
+  <terminologyCacheSeconds>300</terminologyCacheSeconds>
+  <terminologyTimeoutSeconds>10</terminologyTimeoutSeconds>
+  <mappings>[{&quot;key&quot;: &quot;Patient.identifier:ipp.value&quot;, &quot;element&quot;: &quot;Patient.identifier:ipp.value&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirFind(msg[&apos;PID&apos;][&apos;PID.3&apos;], function (cx) { return cx[&apos;PID.3.5&apos;] == &apos;PI&apos;; })[&apos;PID.3.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;ipp#0&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;Patient.name&quot;, &quot;each&quot;: &quot;msg[&apos;PID&apos;][&apos;PID.5&apos;]&quot;, &quot;variable&quot;: &quot;n&quot;, &quot;path&quot;: [[&quot;name&quot;, &quot;#0&quot;]]}, {&quot;key&quot;: &quot;Patient.name.use&quot;, &quot;element&quot;: &quot;Patient.name.use&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;({L: &apos;official&apos;, D: &apos;usual&apos;, M: &apos;maiden&apos;})[n[&apos;PID.5.7&apos;].toString()]&quot;, &quot;path&quot;: [[&quot;name&quot;, &quot;#0&quot;], [&quot;use&quot;]]}, {&quot;key&quot;: &quot;Patient.name.family&quot;, &quot;element&quot;: &quot;Patient.name.family&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;n[&apos;PID.5.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;name&quot;, &quot;#0&quot;], [&quot;family&quot;]]}, {&quot;key&quot;: &quot;Patient.name.given&quot;, &quot;element&quot;: &quot;Patient.name.given&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;n[&apos;PID.5.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;name&quot;, &quot;#0&quot;], [&quot;given&quot;, &quot;#0&quot;]]}, {&quot;key&quot;: &quot;Patient.name.given[1]&quot;, &quot;element&quot;: &quot;Patient.name.given[1]&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;n[&apos;PID.5.3&apos;].toString()&quot;, &quot;path&quot;: [[&quot;name&quot;, &quot;#0&quot;], [&quot;given&quot;, &quot;#1&quot;]]}, {&quot;key&quot;: &quot;Patient.name.prefix&quot;, &quot;element&quot;: &quot;Patient.name.prefix&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;n[&apos;PID.5.5&apos;].toString()&quot;, &quot;path&quot;: [[&quot;name&quot;, &quot;#0&quot;], [&quot;prefix&quot;, &quot;#0&quot;]]}, {&quot;key&quot;: &quot;Patient.telecom&quot;, &quot;each&quot;: &quot;msg[&apos;PID&apos;][&apos;PID.13&apos;]&quot;, &quot;variable&quot;: &quot;t&quot;, &quot;path&quot;: [[&quot;telecom&quot;, &quot;#0&quot;]]}, {&quot;key&quot;: &quot;Patient.telecom.system&quot;, &quot;element&quot;: &quot;Patient.telecom.system&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;t[&apos;PID.13.3&apos;].toString() == &apos;Internet&apos; ? &apos;email&apos; : &apos;phone&apos;&quot;, &quot;path&quot;: [[&quot;telecom&quot;, &quot;#0&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;Patient.telecom.value&quot;, &quot;element&quot;: &quot;Patient.telecom.value&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;t[&apos;PID.13.4&apos;].toString() || t[&apos;PID.13.12&apos;].toString()&quot;, &quot;path&quot;: [[&quot;telecom&quot;, &quot;#0&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;Patient.telecom.use&quot;, &quot;element&quot;: &quot;Patient.telecom.use&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;({CP: &apos;mobile&apos;, PH: &apos;home&apos;})[t[&apos;PID.13.3&apos;].toString()]&quot;, &quot;path&quot;: [[&quot;telecom&quot;, &quot;#0&quot;], [&quot;use&quot;]]}, {&quot;key&quot;: &quot;Patient.gender&quot;, &quot;element&quot;: &quot;Patient.gender&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;msg[&apos;PID&apos;][&apos;PID.8&apos;][&apos;PID.8.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;gender&quot;]], &quot;translate&quot;: {&quot;conceptMap&quot;: &quot;http://example.org/fhir/oru2fhir/ConceptMap/v2-0001-to-gender&quot;, &quot;source&quot;: &quot;http://terminology.hl7.org/CodeSystem/v2-0001&quot;, &quot;target&quot;: &quot;&quot;, &quot;unmapped&quot;: &quot;none&quot;, &quot;keepSource&quot;: false}}, {&quot;key&quot;: &quot;Patient.birthDate&quot;, &quot;element&quot;: &quot;Patient.birthDate&quot;, &quot;type&quot;: &quot;date&quot;, &quot;expression&quot;: &quot;msg[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;birthDate&quot;]]}, {&quot;key&quot;: &quot;Patient.address.line&quot;, &quot;element&quot;: &quot;Patient.address.line&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;address&quot;, &quot;#0&quot;], [&quot;line&quot;, &quot;#0&quot;]]}, {&quot;key&quot;: &quot;Patient.address.line[1]&quot;, &quot;element&quot;: &quot;Patient.address.line[1]&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;address&quot;, &quot;#0&quot;], [&quot;line&quot;, &quot;#1&quot;]]}, {&quot;key&quot;: &quot;Patient.address.city&quot;, &quot;element&quot;: &quot;Patient.address.city&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.3&apos;].toString()&quot;, &quot;path&quot;: [[&quot;address&quot;, &quot;#0&quot;], [&quot;city&quot;]]}, {&quot;key&quot;: &quot;Patient.address.postalCode&quot;, &quot;element&quot;: &quot;Patient.address.postalCode&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.5&apos;].toString()&quot;, &quot;path&quot;: [[&quot;address&quot;, &quot;#0&quot;], [&quot;postalCode&quot;]]}, {&quot;key&quot;: &quot;Patient.address.country&quot;, &quot;element&quot;: &quot;Patient.address.country&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.6&apos;].toString()&quot;, &quot;path&quot;: [[&quot;address&quot;, &quot;#0&quot;], [&quot;country&quot;]]}, {&quot;key&quot;: &quot;Patient.identifier:ipp.system&quot;, &quot;element&quot;: &quot;Patient.identifier:ipp.system&quot;, &quot;fixed&quot;: &quot;http://example.org/fhir/oru2fhir/sid/ipp&quot;, &quot;when&quot;: 1, &quot;path&quot;: [[&quot;identifier&quot;, &quot;ipp#0&quot;], [&quot;system&quot;]]}]</mappings>
+</com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep>
+<com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep version="4.7.0">
+  <name>Encounter</name>
+  <sequenceNumber>2</sequenceNumber>
+  <enabled>true</enabled>
+  <fhirVersion>R4</fhirVersion>
+  <profiles>/fhir-ig</profiles>
+  <profileUrl>Encounter</profileUrl>
+  <profileVersion></profileVersion>
+  <resourceType>Encounter</resourceType>
+  <addMetaProfile>false</addMetaProfile>
+  <setLastUpdated>false</setLastUpdated>
+  <variable></variable>
+  <output>bundle</output>
+  <bundleType>transaction</bundleType>
+  <bundleProfile></bundleProfile>
+  <refName>&apos;encounter&apos;</refName>
+  <requestMethod>POST</requestMethod>
+  <requestUrl></requestUrl>
+  <ifNoneExist>&apos;identifier=http://example.org/fhir/oru2fhir/sid/visit|&apos; + msg[&apos;PV1&apos;][&apos;PV1.19&apos;][&apos;PV1.19.1&apos;]</ifNoneExist>
+  <terminologyServer>n/a</terminologyServer>
+  <terminologyAuthorization></terminologyAuthorization>
+  <terminologyCacheSeconds>300</terminologyCacheSeconds>
+  <terminologyTimeoutSeconds>10</terminologyTimeoutSeconds>
+  <mappings>[{&quot;key&quot;: &quot;Encounter&quot;, &quot;condition&quot;: &quot;msg[&apos;PV1&apos;].length() &gt; 0&quot;, &quot;path&quot;: []}, {&quot;key&quot;: &quot;Encounter.identifier.system&quot;, &quot;element&quot;: &quot;Encounter.identifier.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://example.org/fhir/oru2fhir/sid/visit&apos;&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#0&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;Encounter.identifier.value&quot;, &quot;element&quot;: &quot;Encounter.identifier.value&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;msg[&apos;PV1&apos;][&apos;PV1.19&apos;][&apos;PV1.19.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#0&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;Encounter.status&quot;, &quot;element&quot;: &quot;Encounter.status&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;msg[&apos;PV1&apos;][&apos;PV1.45&apos;][&apos;PV1.45.1&apos;].toString() ? &apos;finished&apos; : &apos;in-progress&apos;&quot;, &quot;path&quot;: [[&quot;status&quot;]]}, {&quot;key&quot;: &quot;Encounter.class.system&quot;, &quot;element&quot;: &quot;Encounter.class.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://terminology.hl7.org/CodeSystem/v3-ActCode&apos;&quot;, &quot;path&quot;: [[&quot;class&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;Encounter.class.code&quot;, &quot;element&quot;: &quot;Encounter.class.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;({I: &apos;IMP&apos;, O: &apos;AMB&apos;, E: &apos;EMER&apos;})[msg[&apos;PV1&apos;][&apos;PV1.2&apos;][&apos;PV1.2.1&apos;].toString()]&quot;, &quot;path&quot;: [[&quot;class&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;Encounter.subject.reference&quot;, &quot;element&quot;: &quot;Encounter.subject.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;patient&apos;)&quot;, &quot;path&quot;: [[&quot;subject&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;Encounter.period.start&quot;, &quot;element&quot;: &quot;Encounter.period.start&quot;, &quot;type&quot;: &quot;dateTime&quot;, &quot;expression&quot;: &quot;msg[&apos;PV1&apos;][&apos;PV1.44&apos;][&apos;PV1.44.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;period&quot;], [&quot;start&quot;]]}, {&quot;key&quot;: &quot;Encounter.period.end&quot;, &quot;element&quot;: &quot;Encounter.period.end&quot;, &quot;type&quot;: &quot;dateTime&quot;, &quot;expression&quot;: &quot;msg[&apos;PV1&apos;][&apos;PV1.45&apos;][&apos;PV1.45.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;period&quot;], [&quot;end&quot;]]}]</mappings>
+</com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep>
+<com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep version="4.7.0">
+  <name>ServiceRequest</name>
+  <sequenceNumber>3</sequenceNumber>
+  <enabled>true</enabled>
+  <fhirVersion>R4</fhirVersion>
+  <profiles>/fhir-ig</profiles>
+  <profileUrl>http://example.org/fhir/oru2fhir/StructureDefinition/ExampleLabServiceRequest</profileUrl>
+  <profileVersion></profileVersion>
+  <resourceType>ServiceRequest</resourceType>
+  <addMetaProfile>true</addMetaProfile>
+  <setLastUpdated>false</setLastUpdated>
+  <variable></variable>
+  <output>bundle</output>
+  <bundleType>transaction</bundleType>
+  <bundleProfile></bundleProfile>
+  <refName>&apos;sr-&apos; + obrIndex</refName>
+  <requestMethod>POST</requestMethod>
+  <requestUrl></requestUrl>
+  <ifNoneExist></ifNoneExist>
+  <terminologyServer>n/a</terminologyServer>
+  <terminologyAuthorization></terminologyAuthorization>
+  <terminologyCacheSeconds>300</terminologyCacheSeconds>
+  <terminologyTimeoutSeconds>10</terminologyTimeoutSeconds>
+  <mappings>[{&quot;key&quot;: &quot;ServiceRequest&quot;, &quot;each&quot;: &quot;msg[&apos;OBR&apos;]&quot;, &quot;variable&quot;: &quot;obr&quot;, &quot;path&quot;: []}, {&quot;key&quot;: &quot;ServiceRequest.identifier.type.coding.system&quot;, &quot;element&quot;: &quot;ServiceRequest.identifier.type.coding.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://terminology.hl7.org/CodeSystem/v2-0203&apos;&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#0&quot;], [&quot;type&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.identifier.type.coding.code&quot;, &quot;element&quot;: &quot;ServiceRequest.identifier.type.coding.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;&apos;PLAC&apos;&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#0&quot;], [&quot;type&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.identifier.value&quot;, &quot;element&quot;: &quot;ServiceRequest.identifier.value&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.2&apos;][&apos;OBR.2.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#0&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.identifier[1].type.coding.system&quot;, &quot;element&quot;: &quot;ServiceRequest.identifier[1].type.coding.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://terminology.hl7.org/CodeSystem/v2-0203&apos;&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#1&quot;], [&quot;type&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.identifier[1].type.coding.code&quot;, &quot;element&quot;: &quot;ServiceRequest.identifier[1].type.coding.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;&apos;FILL&apos;&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#1&quot;], [&quot;type&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.identifier[1].value&quot;, &quot;element&quot;: &quot;ServiceRequest.identifier[1].value&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.3&apos;][&apos;OBR.3.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#1&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.status&quot;, &quot;element&quot;: &quot;ServiceRequest.status&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;hl7Preceding(obr, &apos;ORC&apos;)[&apos;ORC.5&apos;][&apos;ORC.5.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;status&quot;]], &quot;translate&quot;: {&quot;conceptMap&quot;: &quot;http://example.org/fhir/oru2fhir/ConceptMap/v2-0038-to-request-status&quot;, &quot;source&quot;: &quot;http://terminology.hl7.org/CodeSystem/v2-0038&quot;, &quot;target&quot;: &quot;&quot;, &quot;unmapped&quot;: &quot;none&quot;, &quot;keepSource&quot;: false}}, {&quot;key&quot;: &quot;ServiceRequest.intent&quot;, &quot;element&quot;: &quot;ServiceRequest.intent&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;&apos;order&apos;&quot;, &quot;path&quot;: [[&quot;intent&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.code.coding.system&quot;, &quot;element&quot;: &quot;ServiceRequest.code.coding.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://example.org/fhir/oru2fhir/CodeSystem/lab-codes&apos;&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.code.coding.code&quot;, &quot;element&quot;: &quot;ServiceRequest.code.coding.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.4&apos;][&apos;OBR.4.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.code.coding.display&quot;, &quot;element&quot;: &quot;ServiceRequest.code.coding.display&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;display&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.code.text&quot;, &quot;element&quot;: &quot;ServiceRequest.code.text&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;text&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.subject.reference&quot;, &quot;element&quot;: &quot;ServiceRequest.subject.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;patient&apos;)&quot;, &quot;path&quot;: [[&quot;subject&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.encounter.reference&quot;, &quot;element&quot;: &quot;ServiceRequest.encounter.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;encounter&apos;)&quot;, &quot;path&quot;: [[&quot;encounter&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.authoredOn&quot;, &quot;element&quot;: &quot;ServiceRequest.authoredOn&quot;, &quot;type&quot;: &quot;dateTime&quot;, &quot;expression&quot;: &quot;hl7Preceding(obr, &apos;ORC&apos;)[&apos;ORC.9&apos;][&apos;ORC.9.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;authoredOn&quot;]]}, {&quot;key&quot;: &quot;ServiceRequest.requester.display&quot;, &quot;element&quot;: &quot;ServiceRequest.requester.display&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;(obr[&apos;OBR.16&apos;][&apos;OBR.16.3&apos;] + &apos; &apos; + obr[&apos;OBR.16&apos;][&apos;OBR.16.2&apos;]).trim()&quot;, &quot;path&quot;: [[&quot;requester&quot;], [&quot;display&quot;]]}]</mappings>
+</com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep>
+<com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep version="4.7.0">
+  <name>Specimen</name>
+  <sequenceNumber>4</sequenceNumber>
+  <enabled>true</enabled>
+  <fhirVersion>R4</fhirVersion>
+  <profiles>/fhir-ig</profiles>
+  <profileUrl>http://example.org/fhir/oru2fhir/StructureDefinition/ExampleLabSpecimen</profileUrl>
+  <profileVersion></profileVersion>
+  <resourceType>Specimen</resourceType>
+  <addMetaProfile>true</addMetaProfile>
+  <setLastUpdated>false</setLastUpdated>
+  <variable></variable>
+  <output>bundle</output>
+  <bundleType>transaction</bundleType>
+  <bundleProfile></bundleProfile>
+  <refName>&apos;spm-&apos; + hl7Ordinal(hl7Preceding(spm, &apos;OBR&apos;, []))</refName>
+  <requestMethod>POST</requestMethod>
+  <requestUrl></requestUrl>
+  <ifNoneExist></ifNoneExist>
+  <terminologyServer>n/a</terminologyServer>
+  <terminologyAuthorization></terminologyAuthorization>
+  <terminologyCacheSeconds>300</terminologyCacheSeconds>
+  <terminologyTimeoutSeconds>10</terminologyTimeoutSeconds>
+  <mappings>[{&quot;key&quot;: &quot;Specimen&quot;, &quot;each&quot;: &quot;msg[&apos;SPM&apos;]&quot;, &quot;variable&quot;: &quot;spm&quot;, &quot;path&quot;: []}, {&quot;key&quot;: &quot;Specimen.identifier.value&quot;, &quot;element&quot;: &quot;Specimen.identifier.value&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;spm[&apos;SPM.2&apos;][&apos;SPM.2.1&apos;][&apos;SPM.2.1.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#0&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;Specimen.type.coding.system&quot;, &quot;element&quot;: &quot;Specimen.type.coding.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://example.org/fhir/oru2fhir/CodeSystem/lab-codes&apos;&quot;, &quot;path&quot;: [[&quot;type&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;Specimen.type.coding.code&quot;, &quot;element&quot;: &quot;Specimen.type.coding.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;spm[&apos;SPM.4&apos;][&apos;SPM.4.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;type&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;Specimen.type.coding.display&quot;, &quot;element&quot;: &quot;Specimen.type.coding.display&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;spm[&apos;SPM.4&apos;][&apos;SPM.4.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;type&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;display&quot;]]}, {&quot;key&quot;: &quot;Specimen.type.text&quot;, &quot;element&quot;: &quot;Specimen.type.text&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;spm[&apos;SPM.4&apos;][&apos;SPM.4.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;type&quot;], [&quot;text&quot;]]}, {&quot;key&quot;: &quot;Specimen.subject.reference&quot;, &quot;element&quot;: &quot;Specimen.subject.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;patient&apos;)&quot;, &quot;path&quot;: [[&quot;subject&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;Specimen.receivedTime&quot;, &quot;element&quot;: &quot;Specimen.receivedTime&quot;, &quot;type&quot;: &quot;dateTime&quot;, &quot;expression&quot;: &quot;spm[&apos;SPM.18&apos;][&apos;SPM.18.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;receivedTime&quot;]]}, {&quot;key&quot;: &quot;Specimen.request.reference&quot;, &quot;element&quot;: &quot;Specimen.request.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;sr-&apos; + hl7Ordinal(hl7Preceding(spm, &apos;OBR&apos;, [])))&quot;, &quot;path&quot;: [[&quot;request&quot;, &quot;#0&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;Specimen.collection.collectedDateTime&quot;, &quot;element&quot;: &quot;Specimen.collection.collectedDateTime&quot;, &quot;type&quot;: &quot;dateTime&quot;, &quot;expression&quot;: &quot;spm[&apos;SPM.17&apos;][&apos;SPM.17.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;collection&quot;], [&quot;collectedDateTime&quot;]]}]</mappings>
+</com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep>
+<com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep version="4.7.0">
+  <name>Observation</name>
+  <sequenceNumber>5</sequenceNumber>
+  <enabled>true</enabled>
+  <fhirVersion>R4</fhirVersion>
+  <profiles>/fhir-ig</profiles>
+  <profileUrl>http://example.org/fhir/oru2fhir/StructureDefinition/ExampleLabObservation</profileUrl>
+  <profileVersion></profileVersion>
+  <resourceType>Observation</resourceType>
+  <addMetaProfile>true</addMetaProfile>
+  <setLastUpdated>false</setLastUpdated>
+  <variable></variable>
+  <output>bundle</output>
+  <bundleType>transaction</bundleType>
+  <bundleProfile></bundleProfile>
+  <refName>&apos;obs-&apos; + hl7Ordinal(hl7Preceding(obx, &apos;OBR&apos;, []))</refName>
+  <requestMethod>POST</requestMethod>
+  <requestUrl></requestUrl>
+  <ifNoneExist></ifNoneExist>
+  <terminologyServer>n/a</terminologyServer>
+  <terminologyAuthorization></terminologyAuthorization>
+  <terminologyCacheSeconds>300</terminologyCacheSeconds>
+  <terminologyTimeoutSeconds>10</terminologyTimeoutSeconds>
+  <mappings>[{&quot;key&quot;: &quot;Observation&quot;, &quot;each&quot;: &quot;msg[&apos;OBX&apos;]&quot;, &quot;variable&quot;: &quot;obx&quot;, &quot;path&quot;: []}, {&quot;key&quot;: &quot;Observation&quot;, &quot;condition&quot;: &quot;obx[&apos;OBX.2&apos;][&apos;OBX.2.1&apos;].toString() != &apos;ED&apos;&quot;, &quot;path&quot;: []}, {&quot;key&quot;: &quot;Observation.basedOn.reference&quot;, &quot;element&quot;: &quot;Observation.basedOn.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;sr-&apos; + hl7Ordinal(hl7Preceding(obx, &apos;OBR&apos;, [])))&quot;, &quot;path&quot;: [[&quot;basedOn&quot;, &quot;#0&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;Observation.status&quot;, &quot;element&quot;: &quot;Observation.status&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.11&apos;][&apos;OBX.11.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;status&quot;]], &quot;translate&quot;: {&quot;conceptMap&quot;: &quot;http://example.org/fhir/oru2fhir/ConceptMap/v2-0085-to-observation-status&quot;, &quot;source&quot;: &quot;http://terminology.hl7.org/CodeSystem/v2-0085&quot;, &quot;target&quot;: &quot;&quot;, &quot;unmapped&quot;: &quot;fixed&quot;, &quot;keepSource&quot;: false, &quot;value&quot;: &quot;unknown&quot;}}, {&quot;key&quot;: &quot;Observation.code.coding.system&quot;, &quot;element&quot;: &quot;Observation.code.coding.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://example.org/fhir/oru2fhir/CodeSystem/lab-codes&apos;&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;Observation.code.coding.code&quot;, &quot;element&quot;: &quot;Observation.code.coding.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.3&apos;][&apos;OBX.3.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;Observation.code.coding.display&quot;, &quot;element&quot;: &quot;Observation.code.coding.display&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;display&quot;]]}, {&quot;key&quot;: &quot;Observation.code.coding[1]&quot;, &quot;element&quot;: &quot;Observation.code.coding[1]&quot;, &quot;type&quot;: &quot;Coding&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.3&apos;][&apos;OBX.3.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;coding&quot;, &quot;#1&quot;]], &quot;translate&quot;: {&quot;conceptMap&quot;: &quot;http://example.org/fhir/oru2fhir/ConceptMap/lab-codes-to-loinc&quot;, &quot;source&quot;: &quot;http://example.org/fhir/oru2fhir/CodeSystem/lab-codes&quot;, &quot;target&quot;: &quot;&quot;, &quot;unmapped&quot;: &quot;none&quot;, &quot;keepSource&quot;: false}}, {&quot;key&quot;: &quot;Observation.code.text&quot;, &quot;element&quot;: &quot;Observation.code.text&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;text&quot;]]}, {&quot;key&quot;: &quot;Observation.subject.reference&quot;, &quot;element&quot;: &quot;Observation.subject.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;patient&apos;)&quot;, &quot;path&quot;: [[&quot;subject&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;Observation.encounter.reference&quot;, &quot;element&quot;: &quot;Observation.encounter.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;encounter&apos;)&quot;, &quot;path&quot;: [[&quot;encounter&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;Observation.effectiveDateTime&quot;, &quot;element&quot;: &quot;Observation.effectiveDateTime&quot;, &quot;type&quot;: &quot;dateTime&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.14&apos;][&apos;OBX.14.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;effectiveDateTime&quot;]]}, {&quot;key&quot;: &quot;Observation.issued&quot;, &quot;element&quot;: &quot;Observation.issued&quot;, &quot;type&quot;: &quot;instant&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.19&apos;][&apos;OBX.19.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;issued&quot;]]}, {&quot;key&quot;: &quot;Observation.performer.display&quot;, &quot;element&quot;: &quot;Observation.performer.display&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;(obx[&apos;OBX.16&apos;][&apos;OBX.16.3&apos;] + &apos; &apos; + obx[&apos;OBX.16&apos;][&apos;OBX.16.2&apos;]).trim()&quot;, &quot;path&quot;: [[&quot;performer&quot;, &quot;#0&quot;], [&quot;display&quot;]]}, {&quot;key&quot;: &quot;Observation.value[x].valueQuantity&quot;, &quot;condition&quot;: &quot;obx[&apos;OBX.2&apos;][&apos;OBX.2.1&apos;].toString() == &apos;NM&apos;&quot;, &quot;path&quot;: [[&quot;valueQuantity&quot;]]}, {&quot;key&quot;: &quot;Observation.value[x].valueQuantity.value&quot;, &quot;element&quot;: &quot;Observation.value[x].valueQuantity.value&quot;, &quot;type&quot;: &quot;decimal&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.5&apos;][&apos;OBX.5.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;valueQuantity&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;Observation.value[x].valueQuantity.unit&quot;, &quot;element&quot;: &quot;Observation.value[x].valueQuantity.unit&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.6&apos;][&apos;OBX.6.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;valueQuantity&quot;], [&quot;unit&quot;]]}, {&quot;key&quot;: &quot;Observation.value[x].valueQuantity.system&quot;, &quot;element&quot;: &quot;Observation.value[x].valueQuantity.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://unitsofmeasure.org&apos;&quot;, &quot;path&quot;: [[&quot;valueQuantity&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;Observation.value[x].valueQuantity.code&quot;, &quot;element&quot;: &quot;Observation.value[x].valueQuantity.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.6&apos;][&apos;OBX.6.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;valueQuantity&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;Observation.value[x].valueString&quot;, &quot;condition&quot;: &quot;[&apos;ST&apos;, &apos;TX&apos;, &apos;FT&apos;].indexOf(obx[&apos;OBX.2&apos;][&apos;OBX.2.1&apos;].toString()) &gt;= 0&quot;, &quot;path&quot;: [[&quot;valueString&quot;]]}, {&quot;key&quot;: &quot;Observation.value[x].valueString&quot;, &quot;element&quot;: &quot;Observation.value[x].valueString&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.5&apos;][&apos;OBX.5.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;valueString&quot;]]}, {&quot;key&quot;: &quot;Observation.interpretation&quot;, &quot;element&quot;: &quot;Observation.interpretation&quot;, &quot;type&quot;: &quot;CodeableConcept&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.8&apos;][&apos;OBX.8.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;interpretation&quot;, &quot;#0&quot;]], &quot;translate&quot;: {&quot;conceptMap&quot;: &quot;http://example.org/fhir/oru2fhir/ConceptMap/v2-0078-to-interpretation&quot;, &quot;source&quot;: &quot;http://terminology.hl7.org/CodeSystem/v2-0078&quot;, &quot;target&quot;: &quot;&quot;, &quot;unmapped&quot;: &quot;none&quot;, &quot;keepSource&quot;: false}}, {&quot;key&quot;: &quot;Observation.specimen.reference&quot;, &quot;element&quot;: &quot;Observation.specimen.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;spm-&apos; + hl7Ordinal(hl7Preceding(obx, &apos;OBR&apos;, [])))&quot;, &quot;path&quot;: [[&quot;specimen&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;Observation.referenceRange&quot;, &quot;condition&quot;: &quot;obx[&apos;OBX.7&apos;][&apos;OBX.7.1&apos;].toString().indexOf(&apos;-&apos;) &gt; 0&quot;, &quot;path&quot;: [[&quot;referenceRange&quot;, &quot;#0&quot;]]}, {&quot;key&quot;: &quot;Observation.referenceRange.low.value&quot;, &quot;element&quot;: &quot;Observation.referenceRange.low.value&quot;, &quot;type&quot;: &quot;decimal&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.7&apos;][&apos;OBX.7.1&apos;].toString().split(&apos;-&apos;)[0]&quot;, &quot;path&quot;: [[&quot;referenceRange&quot;, &quot;#0&quot;], [&quot;low&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;Observation.referenceRange.low.unit&quot;, &quot;element&quot;: &quot;Observation.referenceRange.low.unit&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.6&apos;][&apos;OBX.6.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;referenceRange&quot;, &quot;#0&quot;], [&quot;low&quot;], [&quot;unit&quot;]]}, {&quot;key&quot;: &quot;Observation.referenceRange.low.system&quot;, &quot;element&quot;: &quot;Observation.referenceRange.low.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://unitsofmeasure.org&apos;&quot;, &quot;path&quot;: [[&quot;referenceRange&quot;, &quot;#0&quot;], [&quot;low&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;Observation.referenceRange.low.code&quot;, &quot;element&quot;: &quot;Observation.referenceRange.low.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.6&apos;][&apos;OBX.6.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;referenceRange&quot;, &quot;#0&quot;], [&quot;low&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;Observation.referenceRange.high.value&quot;, &quot;element&quot;: &quot;Observation.referenceRange.high.value&quot;, &quot;type&quot;: &quot;decimal&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.7&apos;][&apos;OBX.7.1&apos;].toString().split(&apos;-&apos;)[1]&quot;, &quot;path&quot;: [[&quot;referenceRange&quot;, &quot;#0&quot;], [&quot;high&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;Observation.referenceRange.high.unit&quot;, &quot;element&quot;: &quot;Observation.referenceRange.high.unit&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.6&apos;][&apos;OBX.6.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;referenceRange&quot;, &quot;#0&quot;], [&quot;high&quot;], [&quot;unit&quot;]]}, {&quot;key&quot;: &quot;Observation.referenceRange.high.system&quot;, &quot;element&quot;: &quot;Observation.referenceRange.high.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://unitsofmeasure.org&apos;&quot;, &quot;path&quot;: [[&quot;referenceRange&quot;, &quot;#0&quot;], [&quot;high&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;Observation.referenceRange.high.code&quot;, &quot;element&quot;: &quot;Observation.referenceRange.high.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;obx[&apos;OBX.6&apos;][&apos;OBX.6.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;referenceRange&quot;, &quot;#0&quot;], [&quot;high&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;Observation.category:laboratory&quot;, &quot;element&quot;: &quot;Observation.category:laboratory&quot;, &quot;fixed&quot;: {&quot;coding&quot;: [{&quot;system&quot;: &quot;http://terminology.hl7.org/CodeSystem/observation-category&quot;, &quot;code&quot;: &quot;laboratory&quot;}]}, &quot;when&quot;: 0, &quot;path&quot;: [[&quot;category&quot;, &quot;laboratory#0&quot;]]}]</mappings>
+</com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep>
+<com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep version="4.7.0">
+  <name>DiagnosticReport</name>
+  <sequenceNumber>6</sequenceNumber>
+  <enabled>true</enabled>
+  <fhirVersion>R4</fhirVersion>
+  <profiles>/fhir-ig</profiles>
+  <profileUrl>http://example.org/fhir/oru2fhir/StructureDefinition/ExampleLabDiagnosticReport</profileUrl>
+  <profileVersion></profileVersion>
+  <resourceType>DiagnosticReport</resourceType>
+  <addMetaProfile>true</addMetaProfile>
+  <setLastUpdated>false</setLastUpdated>
+  <variable></variable>
+  <output>bundle</output>
+  <bundleType>transaction</bundleType>
+  <bundleProfile></bundleProfile>
+  <refName></refName>
+  <requestMethod>POST</requestMethod>
+  <requestUrl></requestUrl>
+  <ifNoneExist></ifNoneExist>
+  <terminologyServer>n/a</terminologyServer>
+  <terminologyAuthorization></terminologyAuthorization>
+  <terminologyCacheSeconds>300</terminologyCacheSeconds>
+  <terminologyTimeoutSeconds>10</terminologyTimeoutSeconds>
+  <mappings>[{&quot;key&quot;: &quot;DiagnosticReport&quot;, &quot;each&quot;: &quot;msg[&apos;OBR&apos;]&quot;, &quot;variable&quot;: &quot;obr&quot;, &quot;path&quot;: []}, {&quot;key&quot;: &quot;DiagnosticReport.identifier.type.coding.system&quot;, &quot;element&quot;: &quot;DiagnosticReport.identifier.type.coding.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://terminology.hl7.org/CodeSystem/v2-0203&apos;&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#0&quot;], [&quot;type&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.identifier.type.coding.code&quot;, &quot;element&quot;: &quot;DiagnosticReport.identifier.type.coding.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;&apos;FILL&apos;&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#0&quot;], [&quot;type&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.identifier.value&quot;, &quot;element&quot;: &quot;DiagnosticReport.identifier.value&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.3&apos;][&apos;OBR.3.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;identifier&quot;, &quot;#0&quot;], [&quot;value&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.basedOn.reference&quot;, &quot;element&quot;: &quot;DiagnosticReport.basedOn.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;sr-&apos; + obrIndex)&quot;, &quot;path&quot;: [[&quot;basedOn&quot;, &quot;#0&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.status&quot;, &quot;element&quot;: &quot;DiagnosticReport.status&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.25&apos;][&apos;OBR.25.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;status&quot;]], &quot;translate&quot;: {&quot;conceptMap&quot;: &quot;http://example.org/fhir/oru2fhir/ConceptMap/v2-0123-to-report-status&quot;, &quot;source&quot;: &quot;http://terminology.hl7.org/CodeSystem/v2-0123&quot;, &quot;target&quot;: &quot;&quot;, &quot;unmapped&quot;: &quot;fixed&quot;, &quot;keepSource&quot;: false, &quot;value&quot;: &quot;unknown&quot;}}, {&quot;key&quot;: &quot;DiagnosticReport.code.coding.system&quot;, &quot;element&quot;: &quot;DiagnosticReport.code.coding.system&quot;, &quot;type&quot;: &quot;uri&quot;, &quot;expression&quot;: &quot;&apos;http://example.org/fhir/oru2fhir/CodeSystem/lab-codes&apos;&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;system&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.code.coding.code&quot;, &quot;element&quot;: &quot;DiagnosticReport.code.coding.code&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.4&apos;][&apos;OBR.4.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;code&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.code.coding.display&quot;, &quot;element&quot;: &quot;DiagnosticReport.code.coding.display&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;coding&quot;, &quot;#0&quot;], [&quot;display&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.code.text&quot;, &quot;element&quot;: &quot;DiagnosticReport.code.text&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;code&quot;], [&quot;text&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.subject.reference&quot;, &quot;element&quot;: &quot;DiagnosticReport.subject.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;patient&apos;)&quot;, &quot;path&quot;: [[&quot;subject&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.encounter.reference&quot;, &quot;element&quot;: &quot;DiagnosticReport.encounter.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;fhirRef(&apos;encounter&apos;)&quot;, &quot;path&quot;: [[&quot;encounter&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.effectiveDateTime&quot;, &quot;element&quot;: &quot;DiagnosticReport.effectiveDateTime&quot;, &quot;type&quot;: &quot;dateTime&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.7&apos;][&apos;OBR.7.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;effectiveDateTime&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.issued&quot;, &quot;element&quot;: &quot;DiagnosticReport.issued&quot;, &quot;type&quot;: &quot;instant&quot;, &quot;expression&quot;: &quot;obr[&apos;OBR.22&apos;][&apos;OBR.22.1&apos;].toString()&quot;, &quot;path&quot;: [[&quot;issued&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.specimen&quot;, &quot;each&quot;: &quot;fhirRefs(&apos;spm-&apos; + obrIndex)&quot;, &quot;variable&quot;: &quot;sref&quot;, &quot;path&quot;: [[&quot;specimen&quot;, &quot;#0&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.specimen.reference&quot;, &quot;element&quot;: &quot;DiagnosticReport.specimen.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;sref&quot;, &quot;path&quot;: [[&quot;specimen&quot;, &quot;#0&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.result&quot;, &quot;each&quot;: &quot;fhirRefs(&apos;obs-&apos; + obrIndex)&quot;, &quot;variable&quot;: &quot;ref&quot;, &quot;path&quot;: [[&quot;result&quot;, &quot;#0&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.result.reference&quot;, &quot;element&quot;: &quot;DiagnosticReport.result.reference&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;ref&quot;, &quot;path&quot;: [[&quot;result&quot;, &quot;#0&quot;], [&quot;reference&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.presentedForm&quot;, &quot;each&quot;: &quot;hl7Following(obr, &apos;OBX&apos;, [&apos;OBR&apos;, &apos;ORC&apos;])&quot;, &quot;variable&quot;: &quot;ed&quot;, &quot;path&quot;: [[&quot;presentedForm&quot;, &quot;#0&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.presentedForm&quot;, &quot;condition&quot;: &quot;ed[&apos;OBX.2&apos;][&apos;OBX.2.1&apos;].toString() == &apos;ED&apos;&quot;, &quot;path&quot;: [[&quot;presentedForm&quot;, &quot;#0&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.presentedForm.contentType&quot;, &quot;element&quot;: &quot;DiagnosticReport.presentedForm.contentType&quot;, &quot;type&quot;: &quot;code&quot;, &quot;expression&quot;: &quot;ed[&apos;OBX.5&apos;][&apos;OBX.5.2&apos;] + &apos;/&apos; + ed[&apos;OBX.5&apos;][&apos;OBX.5.3&apos;]&quot;, &quot;path&quot;: [[&quot;presentedForm&quot;, &quot;#0&quot;], [&quot;contentType&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.presentedForm.data&quot;, &quot;element&quot;: &quot;DiagnosticReport.presentedForm.data&quot;, &quot;type&quot;: &quot;base64Binary&quot;, &quot;expression&quot;: &quot;(function (d) { return d + [&apos;&apos;, &apos;&apos;, &apos;==&apos;, &apos;=&apos;][d.length % 4]; })(ed[&apos;OBX.5&apos;][&apos;OBX.5.5&apos;].toString())&quot;, &quot;path&quot;: [[&quot;presentedForm&quot;, &quot;#0&quot;], [&quot;data&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.presentedForm.title&quot;, &quot;element&quot;: &quot;DiagnosticReport.presentedForm.title&quot;, &quot;type&quot;: &quot;string&quot;, &quot;expression&quot;: &quot;ed[&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString()&quot;, &quot;path&quot;: [[&quot;presentedForm&quot;, &quot;#0&quot;], [&quot;title&quot;]]}, {&quot;key&quot;: &quot;DiagnosticReport.category:lab&quot;, &quot;element&quot;: &quot;DiagnosticReport.category:lab&quot;, &quot;fixed&quot;: {&quot;coding&quot;: [{&quot;system&quot;: &quot;http://terminology.hl7.org/CodeSystem/v2-0074&quot;, &quot;code&quot;: &quot;LAB&quot;}]}, &quot;when&quot;: 0, &quot;path&quot;: [[&quot;category&quot;, &quot;lab#0&quot;]]}]</mappings>
+</com.mirth.connect.plugins.datatypes.fhir.FhirProfileMapperStep></elements>
+<inboundDataType>HL7V2</inboundDataType><outboundDataType>FHIR</outboundDataType><inboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="4.7.0">
+  <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="4.7.0">
+    <handleRepetitions>true</handleRepetitions>
+    <handleSubcomponents>true</handleSubcomponents>
+    <useStrictParser>false</useStrictParser>
+    <useStrictValidation>false</useStrictValidation>
+    <stripNamespaces>false</stripNamespaces>
+    <segmentDelimiter>\r</segmentDelimiter>
+    <convertLineBreaks>true</convertLineBreaks>
+  </serializationProperties>
+  <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="4.7.0">
+    <useStrictParser>false</useStrictParser>
+    <useStrictValidation>false</useStrictValidation>
+    <segmentDelimiter>\r</segmentDelimiter>
+  </deserializationProperties>
+  <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="4.7.0">
+    <splitType>MSH_Segment</splitType>
+    <batchScript></batchScript>
+  </batchProperties>
+  <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="4.7.0">
+    <segmentDelimiter>\r</segmentDelimiter>
+    <successfulACKCode>AA</successfulACKCode>
+    <successfulACKMessage></successfulACKMessage>
+    <errorACKCode>AE</errorACKCode>
+    <errorACKMessage>An Error Occurred Processing Message.</errorACKMessage>
+    <rejectedACKCode>AR</rejectedACKCode>
+    <rejectedACKMessage>Message Rejected.</rejectedACKMessage>
+    <msh15ACKAccept>false</msh15ACKAccept>
+    <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+  </responseGenerationProperties>
+  <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="4.7.0">
+    <successfulACKCode>AA,CA</successfulACKCode>
+    <errorACKCode>AE,CE</errorACKCode>
+    <rejectedACKCode>AR,CR</rejectedACKCode>
+    <validateMessageControlId>true</validateMessageControlId>
+    <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+    <originalIdMapVariable></originalIdMapVariable>
+  </responseValidationProperties>
+</inboundProperties><outboundProperties class="com.mirth.connect.plugins.datatypes.fhir.FhirDataTypeProperties" version="4.7.0">
+  <serializationProperties class="com.mirth.connect.plugins.datatypes.fhir.FhirSerializationProperties" version="4.7.0">
+    <fhirVersion>R4</fhirVersion>
+    <transformerFormat>XML</transformerFormat>
+    <stripNamespaces>true</stripNamespaces>
+    <outputFormat>JSON</outputFormat>
+    <prettyPrint>true</prettyPrint>
+    <validateInbound>true</validateInbound>
+    <validateOutbound>true</validateOutbound>
+    <invalidMessages>Reject</invalidMessages>
+    <failOn>Errors</failOn>
+    <profiles>/fhir-ig</profiles>
+    <requiredProfile></requiredProfile>
+    <unknownCodeSystems>Warning</unknownCodeSystems>
+    <anyExtensionsAllowed>true</anyExtensionsAllowed>
+    <terminologyServer></terminologyServer>
+  </serializationProperties>
+  <batchProperties class="com.mirth.connect.plugins.datatypes.fhir.FhirBatchProperties" version="4.7.0">
+    <splitType>Bundle_Entry</splitType>
+    <batchScript></batchScript>
+  </batchProperties>
+</outboundProperties></transformer>
+    <filter version="4.7.0">
+      <elements />
+    </filter>
+    <transportName>HTTP Listener</transportName>
+    <mode>SOURCE</mode>
+    <enabled>true</enabled>
+    <waitForPrevious>true</waitForPrevious>
+  </sourceConnector>
+  <destinationConnectors>
+    <connector version="4.7.0">
+      <metaDataId>1</metaDataId>
+      <name>Réponse FHIR</name>
+      <properties class="com.mirth.connect.connectors.js.JavaScriptDispatcherProperties" version="4.7.0">
+        <pluginProperties />
+        <destinationConnectorProperties version="4.7.0">
+          <queueEnabled>false</queueEnabled>
+          <sendFirst>false</sendFirst>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <regenerateTemplate>false</regenerateTemplate>
+          <retryCount>0</retryCount>
+          <rotate>false</rotate>
+          <includeFilterTransformer>false</includeFilterTransformer>
+          <threadCount>1</threadCount>
+          <threadAssignmentVariable />
+          <validateResponse>false</validateResponse>
+          <resourceIds class="linked-hash-map">
+            <entry>
+              <string>Default Resource</string>
+              <string>[Default Resource]</string>
+            </entry>
+          </resourceIds>
+          <queueBufferSize>1000</queueBufferSize>
+          <reattachAttachments>true</reattachAttachments>
+        </destinationConnectorProperties>
+        <script>return connectorMessage.getEncodedData();</script>
+      </properties>
+      <transformer version="4.7.0"><elements />
+<inboundDataType>FHIR</inboundDataType><outboundDataType>FHIR</outboundDataType><inboundProperties class="com.mirth.connect.plugins.datatypes.fhir.FhirDataTypeProperties" version="4.7.0">
+  <serializationProperties class="com.mirth.connect.plugins.datatypes.fhir.FhirSerializationProperties" version="4.7.0">
+    <fhirVersion>R4</fhirVersion>
+    <transformerFormat>XML</transformerFormat>
+    <stripNamespaces>true</stripNamespaces>
+    <outputFormat>JSON</outputFormat>
+    <prettyPrint>true</prettyPrint>
+    <validateInbound>false</validateInbound>
+    <validateOutbound>false</validateOutbound>
+    <invalidMessages>Reject</invalidMessages>
+    <failOn>Errors</failOn>
+    <profiles></profiles>
+    <requiredProfile></requiredProfile>
+    <unknownCodeSystems>Warning</unknownCodeSystems>
+    <anyExtensionsAllowed>true</anyExtensionsAllowed>
+    <terminologyServer></terminologyServer>
+  </serializationProperties>
+  <batchProperties class="com.mirth.connect.plugins.datatypes.fhir.FhirBatchProperties" version="4.7.0">
+    <splitType>Bundle_Entry</splitType>
+    <batchScript></batchScript>
+  </batchProperties>
+</inboundProperties><outboundProperties class="com.mirth.connect.plugins.datatypes.fhir.FhirDataTypeProperties" version="4.7.0">
+  <serializationProperties class="com.mirth.connect.plugins.datatypes.fhir.FhirSerializationProperties" version="4.7.0">
+    <fhirVersion>R4</fhirVersion>
+    <transformerFormat>XML</transformerFormat>
+    <stripNamespaces>true</stripNamespaces>
+    <outputFormat>JSON</outputFormat>
+    <prettyPrint>true</prettyPrint>
+    <validateInbound>false</validateInbound>
+    <validateOutbound>false</validateOutbound>
+    <invalidMessages>Reject</invalidMessages>
+    <failOn>Errors</failOn>
+    <profiles></profiles>
+    <requiredProfile></requiredProfile>
+    <unknownCodeSystems>Warning</unknownCodeSystems>
+    <anyExtensionsAllowed>true</anyExtensionsAllowed>
+    <terminologyServer></terminologyServer>
+  </serializationProperties>
+  <batchProperties class="com.mirth.connect.plugins.datatypes.fhir.FhirBatchProperties" version="4.7.0">
+    <splitType>Bundle_Entry</splitType>
+    <batchScript></batchScript>
+  </batchProperties>
+</outboundProperties></transformer>
+      <responseTransformer version="4.7.0">
+        <elements />
+        <inboundDataType>RAW</inboundDataType>
+        <outboundDataType>RAW</outboundDataType>
+        <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="4.7.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="4.7.0">
+            <splitType>JavaScript</splitType>
+            <batchScript />
+          </batchProperties>
+        </inboundProperties>
+        <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="4.7.0">
+          <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="4.7.0">
+            <splitType>JavaScript</splitType>
+            <batchScript />
+          </batchProperties>
+        </outboundProperties>
+      </responseTransformer>
+      <filter version="4.7.0">
+        <elements />
+      </filter>
+      <transportName>JavaScript Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+  </destinationConnectors>
+  <preprocessingScript>return message;</preprocessingScript>
+  <postprocessingScript>return;</postprocessingScript>
+  <deployScript>return;</deployScript>
+  <undeployScript>return;</undeployScript>
+  <properties version="4.7.0">
+    <clearGlobalChannelMap>true</clearGlobalChannelMap>
+    <messageStorageMode>DEVELOPMENT</messageStorageMode>
+    <encryptData>false</encryptData>
+    <encryptAttachments>false</encryptAttachments>
+    <encryptCustomMetaData>false</encryptCustomMetaData>
+    <removeContentOnCompletion>false</removeContentOnCompletion>
+    <removeOnlyFilteredOnCompletion>false</removeOnlyFilteredOnCompletion>
+    <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
+    <initialState>STARTED</initialState>
+    <storeAttachments>true</storeAttachments>
+    <metaDataColumns />
+    <attachmentProperties version="4.7.0">
+      <type>None</type>
+      <properties />
+    </attachmentProperties>
+    <resourceIds class="linked-hash-map">
+      <entry>
+        <string>Default Resource</string>
+        <string>[Default Resource]</string>
+      </entry>
+    </resourceIds>
+  </properties>
+  <exportData>
+    <metadata>
+      <enabled>true</enabled>
+      <lastModified>
+        <time>1787000000000</time>
+        <timezone>Europe/Paris</timezone>
+      </lastModified>
+      <pruningSettings>
+        <archiveEnabled>true</archiveEnabled>
+        <pruneErroredMessages>false</pruneErroredMessages>
+      </pruningSettings>
+      <userId>1</userId>
+    </metadata>
+  </exportData>
+</channel>

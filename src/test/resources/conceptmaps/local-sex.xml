@@ -1,0 +1,21 @@
+<ConceptMap xmlns="http://hl7.org/fhir">
+  <url value="http://example.org/ConceptMap/local-sex"/>
+  <name value="LocalSex"/>
+  <status value="draft"/>
+  <group>
+    <source value="http://example.org/CodeSystem/local-sex"/>
+    <target value="http://hl7.org/fhir/administrative-gender"/>
+    <element>
+      <code value="1"/>
+      <target><code value="male"/><equivalence value="equal"/></target>
+    </element>
+    <element>
+      <code value="2"/>
+      <target><code value="female"/><equivalence value="disjoint"/></target>
+    </element>
+    <unmapped>
+      <mode value="other-map"/>
+      <url value="http://example.org/ConceptMap/local-sex-fallback"/>
+    </unmapped>
+  </group>
+</ConceptMap>

@@ -1,7 +1,7 @@
 {
     "id": "datatype-fhir",
     "name": "FHIR Data Type",
-    "version": "1.5.1",
+    "version": "1.6.0-poc",
     "author": "X Connections",
     "description": "FHIR data type properties - web equivalent of the FHIR DataTypeClientPlugin.",
     "oie": { "apiMin": "4.6" },

@@ -1,0 +1,131 @@
+### Démonstration ORU^R01 vers Bundle FHIR : Open Integration Engine 4.7.0, sa base PostgreSQL,
+### et l'import du canal d'exemple. Autonome : rien d'autre à cloner ni à lancer.
+###
+### Lancement : docker compose up -d --build   (voir README.md)
+### Les valeurs par défaut conviennent à un poste de développement ; pour les changer, copier
+### .env.example en .env.
+name: demo-oru2fhir
+
+# Rotation des logs Docker : sans limite, le pilote json-file remplit le disque.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: 10m
+    max-file: "5"
+
+volumes:
+  demo-oru2fhir-pgdata:
+  demo-oru2fhir-appdata:
+  demo-oru2fhir-logs:
+
+services:
+  ### Image officielle d'OIE, construite par le Dockerfile du dépôt engine à la tag v4.7.0
+  ### (compilation Gradle : quelques minutes au premier build, le cache BuildKit sert ensuite).
+  ### Service de build uniquement : le profil build l'écarte de docker compose up, mais compose
+  ### le construit quand oie-app en a besoin.
+  oie-engine:
+    build:
+      context: https://github.com/OpenIntegrationEngine/engine.git#v4.7.0
+      ### jre-run : Alpine et Temurin 21 JRE.
+      target: jre-run
+      args:
+        GRADLE_BUILD_ARGS: ${OIE_GRADLE_BUILD_ARGS:--PdisableSigning=true}
+    image: demo-oru2fhir-oie-engine:4.7.0
+    profiles: [build]
+
+  oie-db:
+    image: postgres:18.3-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: oie
+      POSTGRES_USER: oie
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-demo-oru2fhir-db}
+      TZ: ${TZ:-Europe/Paris}
+    ### Pas de ports : la base n'est joignable que depuis le réseau de la démo.
+    volumes:
+      ### Depuis PostgreSQL 18, l'image attend le volume sur le répertoire parent des données.
+      - demo-oru2fhir-pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U oie -d oie"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    logging: *logging
+
+  oie-app:
+    build:
+      ### La racine du dépôt : le Dockerfile compile le plugin depuis ses sources.
+      context: ..
+      dockerfile: demo-oru2fhir/Dockerfile
+      ### Le FROM oie-engine du Dockerfile : l'image du service oie-engine.
+      additional_contexts:
+        oie-engine: service:oie-engine
+    image: demo-oru2fhir-oie:4.7.0
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 60s
+    environment:
+      DATABASE: postgres
+      DATABASE_URL: jdbc:postgresql://oie-db:5432/oie
+      DATABASE_USERNAME: oie
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-demo-oru2fhir-db}
+      ### Les variables _MP_* sont la façon dont configure-from-env, l'entrypoint officiel, écrit
+      ### mirth.properties : _MP_HTTPS_PORT devient https.port. Le même port dedans et dehors.
+      _MP_HTTPS_PORT: "8443"
+      SERVER_ID: ${OIE_SERVER_ID:-6a3c1f0e-0d6b-4c55-9a1e-2f7d8b9c0a11}
+      ### Protègent appdata/keystore.jks, créé au premier démarrage : ne plus les changer ensuite.
+      KEYSTORE_STOREPASS: ${OIE_KEYSTORE_STOREPASS:-demo-oru2fhir-store}
+      KEYSTORE_KEYPASS: ${OIE_KEYSTORE_KEYPASS:-demo-oru2fhir-key}
+      ### Mot de passe du compte admin, appliqué à la création de la base seulement (15 caractères
+      ### minimum depuis OIE 4.7).
+      _MP_SERVER_INITIALADMINPASSWORD: ${OIE_PASSWORD:-demo-oru2fhir-admin}
+      TZ: ${TZ:-Europe/Paris}
+    configs:
+      ### Lu après le -Xmx256m d'OIE : la validation FHIR a besoin de plus.
+      - source: oie-jvm-options
+        target: /opt/engine/conf/custom.vmoptions
+    ports:
+      ### Administration web et API REST.
+      - "${OIE_BIND_ADDRESS:-127.0.0.1}:${OIE_HTTPS_PORT:-8443}:8443"
+      ### Le canal d'exemple : POST d'un ORU^R01 sur http://localhost:8081/oru/
+      - "${OIE_BIND_ADDRESS:-127.0.0.1}:${ORU_PORT:-8081}:8081"
+    volumes:
+      - demo-oru2fhir-appdata:/opt/engine/appdata
+      - demo-oru2fhir-logs:/opt/engine/logs
+      ### L'IG cible de l'exemple : les Profile Packages du canal.
+      - ./ig:/fhir-ig:ro
+    depends_on:
+      oie-db:
+        condition: service_healthy
+    healthcheck:
+      ### Sonde sans identifiants ; wget de BusyBox, l'image n'a pas curl.
+      test: ["CMD", "wget", "--quiet", "--no-check-certificate", "-Y", "off", "-T", "8", "-O", "/dev/null", "https://127.0.0.1:8443/oie-webadmin/"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 120s
+    logging: *logging
+
+  ### Import du canal d'oie-init/channels/ par l'API REST, une fois le moteur prêt.
+  oie-init:
+    image: curlimages/curl:8.21.0
+    restart: "no"
+    entrypoint: ["/bin/sh", "/oie-init/init-channels.sh"]
+    environment:
+      OIE_URL: https://oie-app:8443
+      OIE_USER: admin
+      OIE_PASSWORD: ${OIE_PASSWORD:-demo-oru2fhir-admin}
+      OIE_INIT_FORCE: ${OIE_INIT_FORCE:-false}
+      ### true : pas d'assistant de première connexion (changement du mot de passe) dans l'administration.
+      OIE_SKIP_FIRST_LOGIN: ${OIE_SKIP_FIRST_LOGIN:-true}
+    volumes:
+      - ./oie-init:/oie-init:ro
+    depends_on:
+      oie-app:
+        condition: service_healthy
+    logging: *logging
+
+configs:
+  oie-jvm-options:
+    content: |
+      -Xmx${OIE_JAVA_MAX_HEAP:-2g}

@@ -1,0 +1,63 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "ExampleOruBundle",
+  "url": "http://example.org/fhir/oru2fhir/StructureDefinition/ExampleOruBundle",
+  "version": "0.1.0",
+  "name": "ExampleOruBundle",
+  "title": "Bundle transaction issu d'un ORU^R01",
+  "status": "draft",
+  "experimental": true,
+  "publisher": "Exemple oru2fhir",
+  "description": "Le Bundle transaction que produit le canal d'exemple à partir d'un ORU^R01 : identifiant (MSH-10), date (MSH-7), entrées.",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Bundle",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Bundle",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Bundle",
+        "path": "Bundle"
+      },
+      {
+        "id": "Bundle.identifier",
+        "path": "Bundle.identifier",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Bundle.type",
+        "path": "Bundle.type",
+        "fixedCode": "transaction"
+      },
+      {
+        "id": "Bundle.timestamp",
+        "path": "Bundle.timestamp",
+        "min": 1,
+        "mustSupport": true
+      },
+      {
+        "id": "Bundle.entry",
+        "path": "Bundle.entry",
+        "min": 1
+      },
+      {
+        "id": "Bundle.entry.fullUrl",
+        "path": "Bundle.entry.fullUrl",
+        "min": 1
+      },
+      {
+        "id": "Bundle.entry.resource",
+        "path": "Bundle.entry.resource",
+        "min": 1
+      },
+      {
+        "id": "Bundle.entry.request",
+        "path": "Bundle.entry.request",
+        "min": 1
+      }
+    ]
+  }
+}

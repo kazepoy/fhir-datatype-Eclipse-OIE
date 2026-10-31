@@ -1,0 +1,78 @@
+{
+  "resourceType": "ConceptMap",
+  "id": "v2-0078-to-interpretation",
+  "url": "http://example.org/fhir/oru2fhir/ConceptMap/v2-0078-to-interpretation",
+  "version": "0.1.0",
+  "name": "V20078ToInterpretation",
+  "title": "HL7 v2 table 0078 (anomalie) vers ObservationInterpretation",
+  "status": "draft",
+  "experimental": true,
+  "group": [
+    {
+      "source": "http://terminology.hl7.org/CodeSystem/v2-0078",
+      "target": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+      "element": [
+        {
+          "code": "N",
+          "target": [
+            {
+              "code": "N",
+              "display": "Normal",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "H",
+          "target": [
+            {
+              "code": "H",
+              "display": "High",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "L",
+          "target": [
+            {
+              "code": "L",
+              "display": "Low",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "HH",
+          "target": [
+            {
+              "code": "HH",
+              "display": "Critical high",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "LL",
+          "target": [
+            {
+              "code": "LL",
+              "display": "Critical low",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "A",
+          "target": [
+            {
+              "code": "A",
+              "display": "Abnormal",
+              "equivalence": "equivalent"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

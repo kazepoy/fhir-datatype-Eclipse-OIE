@@ -1,0 +1,56 @@
+### Démo oru2fhir — requêtes prêtes à exécuter (extension REST Client de VS Code ;
+### le client HTTP d'IntelliJ lit aussi ce format).
+### L'API d'OIE est en HTTPS avec un certificat autosigné : dans VS Code, régler
+### "http.proxyStrictSSL": false (ou accepter le certificat) pour les requêtes sur @oie.
+
+@oru = http://localhost:8081/oru/
+@oie = https://localhost:8443/api
+@auth = Basic admin:demo-oru2fhir-admin
+@channel = 5d0f6c2a-8b3e-4f1a-9c7d-2e6b1a0f3c48
+@ig = /fhir-ig
+@base = http://example.org/fhir/oru2fhir
+
+### 1. L'exemple complet : la réponse est le Bundle transaction (12 entrées)
+# charset=UTF-8 : sans lui, l'écouteur HTTP lit le message en ISO-8859-1 et abîme les accents.
+POST {{oru}}
+Content-Type: text/plain; charset=UTF-8
+
+< ./oru-r01-labo.er7
+
+### 2. Un seul résultat, sans séjour ni prélèvement (4 entrées)
+POST {{oru}}
+Content-Type: text/plain; charset=UTF-8
+
+< ./oru-r01-minimal.er7
+
+### 3. Sans date de naissance : refusé par le profil Patient, réponse vide (message en ERROR)
+POST {{oru}}
+Content-Type: text/plain; charset=UTF-8
+
+< ./oru-r01-sans-date-de-naissance.er7
+
+### 4. Les derniers messages du canal, avec leur statut et l'erreur éventuelle
+GET {{oie}}/channels/{{channel}}/messages?limit=3&includeContent=true
+Authorization: {{auth}}
+X-Requested-With: OpenAPI
+Accept: application/xml
+
+### 5. Plugin : les profils de l'IG d'exemple
+GET {{oie}}/extensions/datatype-fhir/profiles?fhirVersion=R4&profiles={{ig}}
+Authorization: {{auth}}
+X-Requested-With: OpenAPI
+
+### 6. Plugin : un profil avec son snapshot (ce que l'éditeur affiche en arbre)
+GET {{oie}}/extensions/datatype-fhir/structure?url={{base}}/StructureDefinition/ExampleLabObservation&fhirVersion=R4&profiles={{ig}}
+Authorization: {{auth}}
+X-Requested-With: OpenAPI
+
+### 7. Plugin : les ConceptMaps de l'IG (sans serveur de terminologie : n/a)
+GET {{oie}}/extensions/datatype-fhir/conceptMaps?server=n/a&profiles={{ig}}&fhirVersion=R4
+Authorization: {{auth}}
+X-Requested-With: OpenAPI
+
+### 8. Plugin : ConceptMap/$translate en local, GLU vers LOINC
+GET {{oie}}/extensions/datatype-fhir/translate?server=n/a&profiles={{ig}}&conceptMap={{base}}/ConceptMap/lab-codes-to-loinc&system={{base}}/CodeSystem/lab-codes&code=GLU&fhirVersion=R4
+Authorization: {{auth}}
+X-Requested-With: OpenAPI

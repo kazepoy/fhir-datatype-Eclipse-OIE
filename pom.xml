@@ -6,7 +6,7 @@
 
   <groupId>com.matthy.oie</groupId>
   <artifactId>datatype-fhir</artifactId>
-  <version>1.5.1</version>
+  <version>1.6.0-poc</version>
   <packaging>jar</packaging>
 
   <name>OIE FHIR Data Type</name>
@@ -18,7 +18,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Must match the engine you deploy to. -->
-    <oie.version>4.6.0</oie.version>
+    <oie.version>4.7.0</oie.version>
     <hapi.version>8.12.1</hapi.version>
     <!-- The engine's Log4j (server-lib/log4j). -->
     <log4j.version>2.25.3</log4j.version>
@@ -183,6 +183,20 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- REST API of the FHIR Profile Mapper (server-lib versions). -->
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+      <version>2.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.mozilla</groupId>
       <artifactId>rhino</artifactId>
@@ -271,7 +285,7 @@
             <goals><goal>jar</goal></goals>
             <configuration>
               <classifier>shared</classifier>
-              <includes><include>com/mirth/connect/plugins/datatypes/fhir/*.class</include></includes>
+              <includes><include>com/mirth/connect/plugins/datatypes/fhir/*.class</include><include>com/mirth/connect/plugins/datatypes/fhir/*.js</include></includes>
             </configuration>
           </execution>
           <execution>

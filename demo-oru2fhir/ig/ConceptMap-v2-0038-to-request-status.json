@@ -1,0 +1,94 @@
+{
+  "resourceType": "ConceptMap",
+  "id": "v2-0038-to-request-status",
+  "url": "http://example.org/fhir/oru2fhir/ConceptMap/v2-0038-to-request-status",
+  "version": "0.1.0",
+  "name": "V20038ToRequestStatus",
+  "title": "HL7 v2 table 0038 (statut de la demande) vers ServiceRequest.status",
+  "status": "draft",
+  "experimental": true,
+  "group": [
+    {
+      "source": "http://terminology.hl7.org/CodeSystem/v2-0038",
+      "target": "http://hl7.org/fhir/request-status",
+      "element": [
+        {
+          "code": "CM",
+          "target": [
+            {
+              "code": "completed",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "IP",
+          "target": [
+            {
+              "code": "active",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "SC",
+          "target": [
+            {
+              "code": "active",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "A",
+          "target": [
+            {
+              "code": "active",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "HD",
+          "target": [
+            {
+              "code": "on-hold",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "CA",
+          "target": [
+            {
+              "code": "revoked",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "DC",
+          "target": [
+            {
+              "code": "revoked",
+              "equivalence": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "ER",
+          "target": [
+            {
+              "code": "entered-in-error",
+              "equivalence": "equivalent"
+            }
+          ]
+        }
+      ],
+      "unmapped": {
+        "mode": "fixed",
+        "code": "unknown"
+      }
+    }
+  ]
+}
